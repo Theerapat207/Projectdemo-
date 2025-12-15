@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UBU Scholarship Portal | Demo UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ubu-bg: #f1f5f9;
+        --ubu-surface: #ffffff;
+        --ubu-surface-alt: #e2e8f0;
+        --ubu-border: #d0d7e2;
+        --ubu-primary: #2563eb;
+        --ubu-primary-soft: #dbeafe;
+        --ubu-accent: #0ea5e9;
+        --ubu-success: #16a34a;
+        --ubu-warning: #eab308;
+        --ubu-danger: #dc2626;
+        --ubu-text: #0f172a;
+        --ubu-muted: #64748b;
+      }
+
+      body {
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #e0f2fe 0, #f8fafc 40%, #f1f5f9 100%);
+        color: var(--ubu-text);
+      }
+
+      .surface {
+        background-color: var(--ubu-surface);
+        border-radius: 1rem;
+        border: 1px solid var(--ubu-border);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      }
+
+      .chip {
+        border-radius: 999px;
+        padding: 0.1rem 0.6rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+      }
+
+      .scrollbar-thin {
+        scrollbar-width: thin;
+      }
+
+      .scrollbar-thin::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .scrollbar-thin::-webkit-scrollbar-thumb {
+        background-color: #cbd5f5;
+        border-radius: 999px;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-slate-900">
+    <div class="min-h-screen flex bg-[var(--ubu-bg)]/80">
+      <!-- Sidebar -->
+      <aside
+        class="hidden md:flex flex-col w-64 border-r border-slate-200 bg-white/80 backdrop-blur"
+      >
+        <div class="flex items-center gap-3 px-6 py-4 border-b border-slate-200">
+          <div
+            class="h-9 w-9 rounded-2xl bg-[var(--ubu-primary)] flex items-center justify-center text-white font-semibold"
+          >
+            U+
+          </div>
+          <div>
+            <p class="text-xs font-semibold tracking-[0.18em] text-slate-500 uppercase">
+              Ubon Ratchathani University
+            </p>
+            <p class="text-sm font-semibold text-slate-900">Scholarship Portal</p>
+          </div>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
+          <button
+            data-screen-target="dashboard"
+            class="nav-item flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-slate-700 hover:bg-slate-100"
+          >
+            <span
+              class="h-7 w-7 rounded-lg bg-[var(--ubu-primary-soft)] text-[var(--ubu-primary)] flex items-center justify-center text-xs font-semibold"
+              >DB</span
+            >
+            <span>Dashboard ทุน</span>
+          </button>
+          <button
+            data-screen-target="profile"
+            class="nav-item flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-slate-700 hover:bg-slate-100"
+          >
+            <span
+              class="h-7 w-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-semibold"
+              >PF</span
+            >
+            <span>ข้อมูลโปรไฟล์นักศึกษา</span>
+          </button>
+        </nav>
+        <div class="px-4 py-4 border-t border-slate-200 text-xs text-slate-500 space-y-1">
+          <p class="font-semibold text-slate-600">ระบบตัวอย่าง</p>
+          <p>UBU Scholarship · Demo UX</p>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col">
+        <!-- Top bar -->
+        <header
+          class="flex items-center justify-between px-4 md:px-8 py-4 border-b border-slate-200 bg-white/70 backdrop-blur"
+        >
+          <div class="flex items-center gap-3">
+            <div class="md:hidden">
+              <span
+                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-xs"
+                >U+</span
+              >
+            </div>
+            <div>
+              <p class="text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase">
+                UBU · Scholarship
+              </p>
+              <h1 class="text-lg md:text-xl font-semibold text-slate-900">
+                ระบบบริหารทุนการศึกษา (Student View)
+              </h1>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-xs">
+            <button
+              id="ubu-login-btn"
+              class="inline-flex items-center gap-1 rounded-lg bg-[var(--ubu-primary)] px-3 py-1.5 font-medium text-white hover:bg-blue-600"
+            >
+              Login ด้วย UBU-Portal
+            </button>
+          </div>
+        </header>
+
+        <!-- Screen container -->
+        <main class="flex-1 px-4 md:px-8 py-6 space-y-6 overflow-y-auto">
+          <!-- Dashboard: ทุนที่เปิดรับ -->
+          <section id="screen-dashboard" data-screen class="space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div>
+                <p class="text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase">
+                  Scholarships · UBU
+                </p>
+                <h2 class="text-lg font-semibold text-slate-900">
+                  ทุนการศึกษาที่เปิดรับสมัครในขณะนี้
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">
+                  แสดงเฉพาะทุนที่กำลังเปิดรับสมัคร สามารถค้นหา/กรองตามคณะ ประเภท และชั้นปีได้
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span
+                  id="login-status-chip"
+                  class="chip bg-slate-100 text-slate-600 border border-slate-200"
+                  >สถานะ: ยังไม่ได้ Login ผ่าน UBU-Portal</span
+                >
+                <span class="chip bg-slate-100 text-slate-600 border border-slate-200"
+                  >ข้อมูลส่วนตัว: <span id="profile-progress-label">0%</span></span
+                >
+              </div>
+            </div>
+
+            <!-- Summary cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div class="surface px-4 py-3 flex flex-col gap-1">
+                <p class="text-xs font-medium text-slate-500">ทุนที่เปิดรับสมัคร</p>
+                <p id="card-total" class="text-xl font-semibold">0</p>
+                <p class="text-[0.7rem] text-slate-500">ทั้งหมดทุกคณะ</p>
+              </div>
+              <div class="surface px-4 py-3 flex flex-col gap-1">
+                <p class="text-xs font-medium text-emerald-600">ทุนเรียนดี</p>
+                <p id="card-merit" class="text-xl font-semibold text-emerald-600">0</p>
+                <p class="text-[0.7rem] text-slate-500">เกรดเฉลี่ยตามเกณฑ์</p>
+              </div>
+              <div class="surface px-4 py-3 flex flex-col gap-1">
+                <p class="text-xs font-medium text-amber-600">ทุนความเดือดร้อน</p>
+                <p id="card-need" class="text-xl font-semibold text-amber-600">0</p>
+                <p class="text-[0.7rem] text-slate-500">รายได้ครอบครัวตามเกณฑ์</p>
+              </div>
+              <div class="surface px-4 py-3 flex flex-col gap-1">
+                <p class="text-xs font-medium text-sky-600">ทุนอื่น ๆ</p>
+                <p id="card-other" class="text-xl font-semibold text-sky-600">0</p>
+                <p class="text-[0.7rem] text-slate-500">ชมรม/บริจาค/โครงการพิเศษ</p>
+              </div>
+            </div>
+
+            <!-- Filters + table -->
+            <div class="surface p-4 space-y-3">
+              <div
+                class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs"
+              >
+                <div class="flex items-center gap-2 flex-1">
+                  <div class="relative flex-1">
+                    <span
+                      class="pointer-events-none absolute inset-y-0 left-2 flex items-center text-slate-400 text-xs"
+                      >🔍</span
+                    >
+                    <input
+                      id="sch-search"
+                      type="text"
+                      class="w-full rounded-lg border border-slate-200 bg-slate-50 pl-7 pr-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--ubu-primary)]/40"
+                      placeholder="ค้นหาชื่อทุน / คำสำคัญ / คณะ"
+                    />
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <select
+                    id="filter-faculty"
+                    class="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                  >
+                    <option value="all">ทุกคณะ/หน่วยงาน</option>
+                    <option value="วิศวกรรมศาสตร์">วิศวกรรมศาสตร์</option>
+                    <option value="บริหารศาสตร์">บริหารศาสตร์</option>
+                    <option value="วิทยาศาสตร์">วิทยาศาสตร์</option>
+                    <option value="เกษตรศาสตร์">เกษตรศาสตร์</option>
+                    <option value="พยาบาลศาสตร์">พยาบาลศาสตร์</option>
+                    <option value="กองพัฒนานักศึกษา">กองพัฒนานักศึกษา</option>
+                  </select>
+                  <select
+                    id="filter-type"
+                    class="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                  >
+                    <option value="all">ทุกประเภททุน</option>
+                    <option value="เรียนดี">ทุนเรียนดี</option>
+                    <option value="ขาดแคลน">ทุนขาดแคลน/ช่วยเหลือ</option>
+                    <option value="บริจาค">ทุนบริจาค</option>
+                  </select>
+                  <select
+                    id="filter-year"
+                    class="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                  >
+                    <option value="all">ทุกชั้นปี</option>
+                    <option value="1">ปี 1</option>
+                    <option value="2">ปี 2</option>
+                    <option value="3">ปี 3</option>
+                    <option value="4">ปี 4</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto scrollbar-thin">
+                <table class="min-w-full text-xs">
+                  <thead class="border-b border-slate-200 bg-slate-50">
+                    <tr class="text-left text-[0.68rem] text-slate-500">
+                      <th class="px-3 py-2 font-medium">ชื่อทุน</th>
+                      <th class="px-3 py-2 font-medium">ประเภททุน</th>
+                      <th class="px-3 py-2 font-medium">คณะ/หน่วยงาน</th>
+                      <th class="px-3 py-2 font-medium">ชั้นปีที่รับ</th>
+                      <th class="px-3 py-2 font-medium">จำนวนเงิน</th>
+                      <th class="px-3 py-2 font-medium">ช่วงรับสมัคร</th>
+                      <th class="px-3 py-2 font-medium text-right">การสมัคร</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sch-table-body" class="divide-y divide-slate-100 text-[0.72rem]">
+                    <!-- filled by JS -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="flex items-center justify-between pt-2 text-[0.7rem] text-slate-500">
+                <p id="sch-summary">แสดง 0 ทุน</p>
+                <p>มหาวิทยาลัยอุบลราชธานี · ข้อมูลตัวอย่างเพื่อการออกแบบ UX</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Profile form: กรอกข้อมูล + Progress -->
+          <section id="screen-profile" data-screen class="hidden space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <button
+                  id="back-to-dashboard"
+                  type="button"
+                  class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  ◀ ย้อนกลับไปหน้า Dashboard
+                </button>
+                <p class="text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase">
+                  Student Profile
+                </p>
+                <h2 class="text-lg font-semibold text-slate-900">
+                  กรอกข้อมูลพื้นฐานสำหรับใช้สมัครทุน (ใช้ร่วมทุกทุน)
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">
+                  กรอกครั้งเดียว ระบบจะดึงไปใช้กับทุกการสมัครทุน นักศึกษาสามารถกลับมาแก้ไขได้ตลอดเวลา
+                </p>
+              </div>
+              <div class="text-xs space-y-1">
+                <p class="text-slate-500">ความคืบหน้าการกรอกข้อมูล</p>
+                <div class="w-56">
+                  <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+                    <div
+                      id="profile-progress-bar"
+                      class="h-2 rounded-full bg-[var(--ubu-primary)] transition-all"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                  <p class="mt-1 text-[0.7rem] text-slate-500">
+                    <span id="profile-progress-text">0 / 16 ช่องสำคัญ</span> กรอกครบ
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Warning box -->
+            <div
+              id="profile-warning"
+              class="surface border-amber-200 bg-amber-50/70 text-amber-800 text-xs flex items-start gap-3 p-3 hidden"
+            >
+              <span class="mt-0.5">⚠️</span>
+              <div>
+                <p class="font-semibold text-xs">ข้อมูลยังไม่ครบถ้วน</p>
+                <p class="text-[0.7rem]">
+                  โปรดกรอกช่องที่จำเป็นให้ครบ ระบบจะแสดงเปอร์เซ็นต์ความคืบหน้าให้แบบเรียลไทม์
+                </p>
+              </div>
+            </div>
+
+            <form
+              id="profile-form"
+              class="grid gap-4 md:grid-cols-[minmax(0,1.7fr)_minmax(0,1.3fr)] items-start text-xs"
+            >
+              <div class="space-y-4">
+                <!-- ข้อมูลส่วนตัว -->
+                <div class="surface p-4 space-y-3">
+                  <p class="text-xs font-semibold text-slate-700">1 · ข้อมูลส่วนตัว</p>
+                  <div class="grid md:grid-cols-2 gap-3">
+                    <div>
+                      <label class="block mb-1 text-slate-500">ชื่อ-สกุล</label>
+                      <input
+                        data-profile-field
+                        name="fullName"
+                        type="text"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="นาย/นางสาว ..."
+                      />
+                    </div>
+                    <div>
+                      <label class="block mb-1 text-slate-500">รหัสนักศึกษา</label>
+                      <input
+                        data-profile-field
+                        name="studentId"
+                        type="text"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="66xxxxxxxx"
+                      />
+                    </div>
+                    <div>
+                      <label class="block mb-1 text-slate-500">คณะ</label>
+                      <select
+                        data-profile-field
+                        name="faculty"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                      >
+                        <option value="">-- เลือกคณะ --</option>
+                        <option value="วิศวกรรมศาสตร์">วิศวกรรมศาสตร์</option>
+                        <option value="บริหารศาสตร์">บริหารศาสตร์</option>
+                        <option value="วิทยาศาสตร์">วิทยาศาสตร์</option>
+                        <option value="เกษตรศาสตร์">เกษตรศาสตร์</option>
+                        <option value="พยาบาลศาสตร์">พยาบาลศาสตร์</option>
+                      </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                      <div>
+                        <label class="block mb-1 text-slate-500">ชั้นปี</label>
+                        <select
+                          data-profile-field
+                          name="year"
+                          class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                        >
+                          <option value="">-</option>
+                          <option value="1">ปี 1</option>
+                          <option value="2">ปี 2</option>
+                          <option value="3">ปี 3</option>
+                          <option value="4">ปี 4</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="block mb-1 text-slate-500">เกรดเฉลี่ย (GPA)</label>
+                        <input
+                          data-profile-field
+                          name="gpa"
+                          step="0.01"
+                          type="number"
+                          class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                          placeholder="3.25"
+                        />
+                      </div>
+                    </div>
+                    <div class="md:col-span-2">
+                      <label class="block mb-1 text-slate-500">เบอร์โทรศัพท์</label>
+                      <input
+                        data-profile-field
+                        name="phone"
+                        type="tel"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="08x-xxx-xxxx"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ครอบครัว & รายได้ -->
+                <div class="surface p-4 space-y-3">
+                  <p class="text-xs font-semibold text-slate-700">
+                    2 · ข้อมูลครอบครัวและรายได้
+                  </p>
+                  <div class="grid md:grid-cols-2 gap-3">
+                    <div>
+                      <label class="block mb-1 text-slate-500"
+                        >จำนวนสมาชิกในครอบครัว (รวมตัวเอง)</label
+                      >
+                      <input
+                        data-profile-field
+                        name="familySize"
+                        type="number"
+                        min="1"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="4"
+                      />
+                    </div>
+                    <div>
+                      <label class="block mb-1 text-slate-500"
+                        >รายได้รวมครอบครัวต่อปี (บาท)</label
+                      >
+                      <input
+                        data-profile-field
+                        name="familyIncome"
+                        type="number"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="120000"
+                      />
+                    </div>
+                    <div>
+                      <label class="block mb-1 text-slate-500">ผู้ปกครองหลัก</label>
+                      <input
+                        data-profile-field
+                        name="guardian"
+                        type="text"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="บิดา/มารดา/ผู้อุปการะ"
+                      />
+                    </div>
+                    <div>
+                      <label class="block mb-1 text-slate-500">อาชีพผู้ปกครองหลัก</label>
+                      <input
+                        data-profile-field
+                        name="guardianJob"
+                        type="text"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="เช่น รับจ้างทั่วไป, เกษตรกร"
+                      />
+                    </div>
+                    <div class="md:col-span-2">
+                      <label class="block mb-1 text-slate-500"
+                        >สถานะครอบครัว (เลือกที่ใกล้เคียง)</label
+                      >
+                      <select
+                        data-profile-field
+                        name="familyStatus"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                      >
+                        <option value="">-- เลือก --</option>
+                        <option value="ปกติ">อยู่พร้อมหน้าบิดามารดา</option>
+                        <option value="หย่าร้าง">บิดามารดาหย่าร้าง/แยกกันอยู่</option>
+                        <option value="กำพร้า">กำพร้า/อยู่กับญาติ</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ข้อมูลอื่น ๆ -->
+                <div class="surface p-4 space-y-3">
+                  <p class="text-xs font-semibold text-slate-700">3 · ข้อมูลเพิ่มเติม</p>
+                  <div class="space-y-2">
+                    <div>
+                      <label class="block mb-1 text-slate-500"
+                        >กิจกรรม/จิตอาสาที่เคยเข้าร่วม (ถ้ามี)</label
+                      >
+                      <textarea
+                        data-profile-field
+                        name="activities"
+                        rows="3"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="เช่น เข้าร่วมชมรม, ทำกิจกรรมจิตอาสา, ตัวแทนนักศึกษา ฯลฯ"
+                      ></textarea>
+                    </div>
+                    <div>
+                      <label class="block mb-1 text-slate-500"
+                        >เหตุผลที่ต้องการรับทุน/ความเดือดร้อน</label
+                      >
+                      <textarea
+                        data-profile-field
+                        name="reason"
+                        rows="3"
+                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs"
+                        placeholder="อธิบายสถานการณ์ปัจจุบันของตนเองและครอบครัว"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ปุ่ม -->
+                <div class="flex justify-end gap-2 text-xs">
+                  <p
+                    id="autosave-label"
+                    class="mr-auto text-[0.7rem] text-slate-500 opacity-0 transition-opacity"
+                  >
+                    บันทึกอัตโนมัติแล้ว
+                  </p>
+                  <button
+                    type="button"
+                    id="profile-reset"
+                    class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    ล้างข้อมูลตัวอย่าง
+                  </button>
+                  <button
+                    type="button"
+                    id="profile-save"
+                    class="rounded-lg bg-[var(--ubu-primary)] px-4 py-1.5 font-medium text-white hover:bg-blue-600"
+                  >
+                    บันทึกข้อมูล
+                  </button>
+                </div>
+              </div>
+
+              <!-- Panel ด้านขวา -->
+              <aside class="space-y-3 text-xs">
+                <div class="surface p-4 space-y-2">
+                  <p class="text-xs font-semibold text-slate-700">
+                    สรุปสถานะการเตรียมข้อมูลสมัครทุน
+                  </p>
+                  <ul class="list-disc list-inside text-[0.7rem] text-slate-600 space-y-1">
+                    <li id="badge-personal">ข้อมูลส่วนตัว: ยังไม่ครบ</li>
+                    <li id="badge-family">ข้อมูลครอบครัว: ยังไม่ครบ</li>
+                    <li id="badge-reason">เหตุผล/กิจกรรม: ยังไม่ครบ</li>
+                  </ul>
+                </div>
+                <div class="surface p-4 space-y-2">
+                  <p class="text-xs font-semibold text-slate-700">การบันทึกอัตโนมัติ</p>
+                  <p class="text-[0.7rem] text-slate-600">
+                    ระบบจะบันทึกข้อมูลลงเบราเซอร์อัตโนมัติทุกครั้งที่พิมพ์
+                    หรือสลับไปหน้าอื่น ทำให้กลับมาแก้ไขต่อได้ โดยไม่ต้องกรอกใหม่ทั้งหมด
+                  </p>
+                </div>
+              </aside>
+            </form>
+          </section>
+        </main>
+
+        <footer
+          class="px-4 md:px-8 py-3 border-t border-slate-200 bg-white/70 backdrop-blur text-[0.7rem] text-slate-500 flex flex-wrap justify-between gap-2"
+        >
+          <span>Ubon Ratchathani University · Scholarship Portal Demo</span>
+          <span>Design style: Material 3 · blue-gray palette · responsive desktop/tablet</span>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Toast แจ้งเตือนล็อกอินสำเร็จ -->
+    <div
+      id="login-toast"
+      class="fixed bottom-4 right-4 z-20 max-w-xs rounded-xl bg-emerald-600 text-white text-xs px-4 py-3 shadow-lg flex items-start gap-2 opacity-0 pointer-events-none transition-opacity"
+    >
+      <span class="mt-0.5">✅</span>
+      <div>
+        <p class="font-semibold">เข้าสู่ระบบด้วย UBU-Portal สำเร็จ (จำลอง)</p>
+        <p class="text-[0.7rem]">
+          ระบบได้บันทึกสถานะการล็อกอินแล้ว สามารถดู/สมัครทุนการศึกษาตามสิทธิ์ได้
+        </p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Screen navigation
+        const screens = Array.from(document.querySelectorAll("[data-screen]"));
+        const navButtons = Array.from(document.querySelectorAll("[data-screen-target]"));
+
+        function showScreen(id) {
+          screens.forEach((s) => {
+            s.classList.toggle("hidden", s.id !== `screen-${id}`);
+          });
+          navButtons.forEach((btn) => {
+            const active = btn.getAttribute("data-screen-target") === id;
+            btn.classList.toggle("bg-slate-100", active);
+          });
+        }
+
+        navButtons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            showScreen(btn.getAttribute("data-screen-target"));
+          });
+        });
+
+        showScreen("dashboard");
+
+        // Login flow (จำลอง) ผ่าน UBU-Portal
+        const UBU_PORTAL_URL = "https://portal.ubu.ac.th/";
+        const loginBtn = document.getElementById("ubu-login-btn");
+        const loginStatusChip = document.getElementById("login-status-chip");
+        const loginToast = document.getElementById("login-toast");
+
+        function setLoggedInUI() {
+          if (!loginStatusChip) return;
+          loginStatusChip.textContent = "สถานะ: เข้าสู่ระบบด้วย UBU-Portal แล้ว";
+          loginStatusChip.className =
+            "chip bg-emerald-50 text-emerald-700 border border-emerald-100";
+        }
+
+        function showLoginToast() {
+          if (!loginToast) return;
+          loginToast.classList.remove("opacity-0", "pointer-events-none");
+          setTimeout(() => {
+            loginToast.classList.add("opacity-0", "pointer-events-none");
+          }, 2000);
+        }
+
+        function handleReturnFromPortal() {
+          if (sessionStorage.getItem("ubuPendingLogin") === "1") {
+            sessionStorage.setItem("ubuPendingLogin", "0");
+            sessionStorage.setItem("ubuLoggedIn", "1");
+            setLoggedInUI();
+            showLoginToast();
+            // หลังล็อกอินเสร็จ (จำลอง) กลับไปหน้า Dashboard
+            showScreen("dashboard");
+          } else if (sessionStorage.getItem("ubuLoggedIn") === "1") {
+            // refresh UI whenกลับเข้ามาภายหลัง
+            setLoggedInUI();
+          }
+        }
+
+        if (loginBtn) {
+          loginBtn.addEventListener("click", () => {
+            sessionStorage.setItem("ubuPendingLogin", "1");
+            window.open(UBU_PORTAL_URL, "_blank");
+          });
+        }
+
+        window.addEventListener("focus", handleReturnFromPortal);
+        handleReturnFromPortal();
+
+        // Scholarship data (mock)
+        const scholarships = [
+          {
+            name: "ทุนเรียนดีมหาวิทยาลัยอุบลราชธานี",
+            type: "เรียนดี",
+            faculty: "กองพัฒนานักศึกษา",
+            year: "1-4",
+            amount: "20,000 บาท/ปี",
+            window: "1 ก.ค. - 31 ก.ค. 2568",
+          },
+          {
+            name: "ทุนช่วยเหลือนักศึกษาขาดแคลนทุนทรัพย์",
+            type: "ขาดแคลน",
+            faculty: "กองพัฒนานักศึกษา",
+            year: "ทุกชั้นปี",
+            amount: "8,000 บาท/ภาคการศึกษา",
+            window: "15 มิ.ย. - 10 ก.ค. 2568",
+          },
+          {
+            name: "ทุนเรียนดี คณะวิศวกรรมศาสตร์",
+            type: "เรียนดี",
+            faculty: "วิศวกรรมศาสตร์",
+            year: "2-4",
+            amount: "10,000 บาท/ปี",
+            window: "1 มิ.ย. - 30 มิ.ย. 2568",
+          },
+          {
+            name: "ทุนปัจจัยพื้นฐานสำหรับนิสิตนักศึกษายากจนพิเศษ",
+            type: "ขาดแคลน",
+            faculty: "วิทยาศาสตร์",
+            year: "1-4",
+            amount: "5,000 บาท/ภาคการศึกษา",
+            window: "1 ก.ค. - 15 ก.ค. 2568",
+          },
+          {
+            name: "ทุนบริจาคศิษย์เก่าเกษตรศาสตร์",
+            type: "บริจาค",
+            faculty: "เกษตรศาสตร์",
+            year: "2-4",
+            amount: "6,000 บาท/ปี",
+            window: "20 มิ.ย. - 20 ก.ค. 2568",
+          },
+          {
+            name: "ทุนเสริมสร้างโอกาส นศ.พยาบาลศาสตร์",
+            type: "ขาดแคลน",
+            faculty: "พยาบาลศาสตร์",
+            year: "2-4",
+            amount: "12,000 บาท/ปี",
+            window: "10 มิ.ย. - 10 ก.ค. 2568",
+          },
+        ];
+
+        const schTableBody = document.getElementById("sch-table-body");
+        const schSearch = document.getElementById("sch-search");
+        const filterFaculty = document.getElementById("filter-faculty");
+        const filterType = document.getElementById("filter-type");
+        const filterYear = document.getElementById("filter-year");
+        const schSummary = document.getElementById("sch-summary");
+        const cardTotal = document.getElementById("card-total");
+        const cardMerit = document.getElementById("card-merit");
+        const cardNeed = document.getElementById("card-need");
+        const cardOther = document.getElementById("card-other");
+
+        function updateSummaryCounts(list) {
+          cardTotal.textContent = list.length;
+          cardMerit.textContent = list.filter((s) => s.type === "เรียนดี").length;
+          cardNeed.textContent = list.filter((s) => s.type === "ขาดแคลน").length;
+          cardOther.textContent = list.filter((s) => s.type === "บริจาค").length;
+        }
+
+        function renderScholarships() {
+          const term = schSearch.value.trim().toLowerCase();
+          const facVal = filterFaculty.value;
+          const typeVal = filterType.value;
+          const yearVal = filterYear.value;
+
+          const filtered = scholarships.filter((s) => {
+            if (facVal !== "all" && s.faculty !== facVal) return false;
+            if (typeVal !== "all" && s.type !== typeVal) return false;
+            if (yearVal !== "all" && !s.year.includes(yearVal)) return false;
+            if (!term) return true;
+            return (
+              s.name.toLowerCase().includes(term) ||
+              s.faculty.toLowerCase().includes(term) ||
+              s.type.toLowerCase().includes(term)
+            );
+          });
+
+          schTableBody.innerHTML = filtered
+            .map(
+              (s) => `
+            <tr class="hover:bg-slate-50">
+              <td class="px-3 py-2 font-medium text-slate-900">${s.name}</td>
+              <td class="px-3 py-2">${s.type}</td>
+              <td class="px-3 py-2">${s.faculty}</td>
+              <td class="px-3 py-2">${s.year}</td>
+              <td class="px-3 py-2">${s.amount}</td>
+              <td class="px-3 py-2">${s.window}</td>
+              <td class="px-3 py-2 text-right">
+                <button
+                  class="rounded-lg border border-slate-200 bg-white px-2 py-1 hover:bg-slate-50 text-[0.7rem]"
+                  data-screen-target="profile"
+                >
+                  ดูรายละเอียด/สมัคร
+                </button>
+              </td>
+            </tr>
+          `
+            )
+            .join("");
+
+        schSummary.textContent = `แสดง ${filtered.length} ทุน จากทั้งหมด ${scholarships.length} ทุน`;
+          updateSummaryCounts(filtered);
+
+          // connect buttons to profile screen
+          schTableBody.querySelectorAll("[data-screen-target]").forEach((btn) => {
+            btn.addEventListener("click", () => showScreen("profile"));
+          });
+        }
+
+        schSearch.addEventListener("input", renderScholarships);
+        filterFaculty.addEventListener("change", renderScholarships);
+        filterType.addEventListener("change", renderScholarships);
+        filterYear.addEventListener("change", renderScholarships);
+        renderScholarships();
+
+        // Profile form with progress + autosave
+        const profileForm = document.getElementById("profile-form");
+        const profileFields = Array.from(
+          document.querySelectorAll("[data-profile-field]")
+        );
+        const profileProgressBar = document.getElementById("profile-progress-bar");
+        const profileProgressText = document.getElementById("profile-progress-text");
+        const profileProgressLabel = document.getElementById("profile-progress-label");
+        const profileWarning = document.getElementById("profile-warning");
+        const autosaveLabel = document.getElementById("autosave-label");
+        const profileSave = document.getElementById("profile-save");
+        const profileReset = document.getElementById("profile-reset");
+        const badgePersonal = document.getElementById("badge-personal");
+        const badgeFamily = document.getElementById("badge-family");
+        const badgeReason = document.getElementById("badge-reason");
+
+        const STORAGE_KEY = "ubu-scholarship-profile-v1";
+
+        function loadProfile() {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          try {
+            const data = JSON.parse(raw);
+            profileFields.forEach((field) => {
+              const name = field.name;
+              if (data[name] !== undefined) {
+                field.value = data[name];
+              }
+            });
+          } catch (e) {
+            console.warn("Cannot parse saved profile", e);
+          }
+        }
+
+        function saveProfile(showToast = true) {
+          const data = {};
+          profileFields.forEach((field) => {
+            data[field.name] = field.value;
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          if (showToast) {
+            autosaveLabel.classList.remove("opacity-0");
+            setTimeout(() => autosaveLabel.classList.add("opacity-0"), 1200);
+          }
+        }
+
+        function updateProgress() {
+          // กำหนดช่องที่ถือว่าสำคัญ
+          const requiredNames = [
+            "fullName",
+            "studentId",
+            "faculty",
+            "year",
+            "gpa",
+            "phone",
+            "familySize",
+            "familyIncome",
+            "guardian",
+            "guardianJob",
+            "familyStatus",
+            "reason",
+          ];
+          let filled = 0;
+          requiredNames.forEach((name) => {
+            const field = profileFields.find((f) => f.name === name);
+            if (field && field.value.trim() !== "") filled += 1;
+          });
+          const total = requiredNames.length;
+          const percent = Math.round((filled / total) * 100);
+          profileProgressBar.style.width = percent + "%";
+          profileProgressText.textContent = `${filled} / ${total} ช่องสำคัญ`;
+          profileProgressLabel.textContent = percent + "%";
+
+          const complete = filled === total;
+          profileWarning.classList.toggle("hidden", complete);
+
+          // Update section badges
+          const personalComplete =
+            ["fullName", "studentId", "faculty", "year", "gpa", "phone"].every(
+              (n) =>
+                (profileFields.find((f) => f.name === n) || { value: "" }).value.trim() !== ""
+            );
+          const familyComplete =
+            ["familySize", "familyIncome", "guardian", "guardianJob", "familyStatus"].every(
+              (n) =>
+                (profileFields.find((f) => f.name === n) || { value: "" }).value.trim() !== ""
+            );
+          const reasonComplete =
+            (profileFields.find((f) => f.name === "reason") || { value: "" }).value.trim() !==
+            "";
+
+          badgePersonal.textContent = personalComplete
+            ? "ข้อมูลส่วนตัว: ครบถ้วน"
+            : "ข้อมูลส่วนตัว: ยังไม่ครบ";
+          badgeFamily.textContent = familyComplete
+            ? "ข้อมูลครอบครัว: ครบถ้วน"
+            : "ข้อมูลครอบครัว: ยังไม่ครบ";
+          badgeReason.textContent = reasonComplete
+            ? "เหตุผล/กิจกรรม: ครบถ้วน"
+            : "เหตุผล/กิจกรรม: ยังไม่ครบ";
+        }
+
+        profileFields.forEach((field) => {
+          field.addEventListener("input", () => {
+            saveProfile(false);
+            updateProgress();
+          });
+        });
+
+        if (profileSave) {
+          profileSave.addEventListener("click", () => {
+            saveProfile(true);
+            updateProgress();
+            alert("บันทึกข้อมูลโปรไฟล์ (ตัวอย่าง) เรียบร้อยแล้ว");
+          });
+        }
+
+        if (profileReset) {
+          profileReset.addEventListener("click", () => {
+            localStorage.removeItem(STORAGE_KEY);
+            profileFields.forEach((f) => (f.value = ""));
+            updateProgress();
+          });
+        }
+
+        loadProfile();
+        updateProgress();
+
+        // Back button on profile -> dashboard
+        const backBtn = document.getElementById("back-to-dashboard");
+        if (backBtn) {
+          backBtn.addEventListener("click", () => showScreen("dashboard"));
+        }
+      });
+    </script>
+  </body>
+</html>
+
+
