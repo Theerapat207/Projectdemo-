@@ -566,12 +566,12 @@
       </div>
     </div>
 
-    <!-- Modal จำลองหน้า UBU Portal Login -->
-    <dialog
+    <!-- Modal จำลองหน้า UBU Portal Login (รองรับมือถือด้วย div-based modal แทน dialog) -->
+    <div
       id="ubu-login-modal"
-      class="rounded-2xl border border-slate-200 shadow-2xl w-full max-w-3xl p-0 backdrop:bg-slate-900/40"
+      class="fixed inset-0 z-30 hidden items-center justify-center bg-slate-900/40 px-3"
     >
-      <div class="flex flex-col md:flex-row h-full">
+      <div class="flex flex-col md:flex-row h-full max-h-[90vh] w-full max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden">
         <!-- Left info -->
         <div class="md:w-1/2 bg-sky-600 text-white p-6 space-y-4 text-xs leading-relaxed">
           <h2 class="text-2xl font-semibold mb-2">UBU - PORTAL</h2>
@@ -637,7 +637,7 @@
           </div>
         </div>
       </div>
-    </dialog>
+    </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -698,7 +698,7 @@
             portalPassword.value = "";
             portalMessage.textContent = "";
             portalMessage.classList.add("hidden");
-            loginModal.showModal();
+            loginModal.classList.remove("hidden");
           });
         }
 
@@ -718,7 +718,7 @@
             sessionStorage.setItem("ubuLoggedIn", "1");
             setLoggedInUI();
             showLoginToast();
-            if (typeof loginModal.close === "function") loginModal.close();
+            loginModal.classList.add("hidden");
             // กลับไปหน้า Dashboard หลังล็อกอินสำเร็จ
             showScreen("dashboard");
           });
@@ -726,7 +726,7 @@
 
         if (portalClose && loginModal) {
           portalClose.addEventListener("click", () => {
-            if (typeof loginModal.close === "function") loginModal.close();
+            loginModal.classList.add("hidden");
           });
         }
 
